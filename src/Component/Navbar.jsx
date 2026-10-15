@@ -51,6 +51,10 @@ export default function Navbar() {
 
   const navItems = [
     { label: "Home", to: "/", active: location.pathname === "/" },
+    { label: "About Us", to: "/aboutus", active: location.pathname === "/aboutus" },
+    { label: "Contact Us", to: "/contactus", active: location.pathname === "/contactus" },
+
+
     
     ...(token
       ? [

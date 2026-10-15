@@ -25,18 +25,19 @@ import Payment from "./Component/Payment";
 import Viewregs from "./Component/Viewregs";
 import View from "./Component/View";
 import Scanqr from "./Component/Scanqr";
+import Aboutus from "./Component/Aboutus";
+import Contact from "./Component/Contact";
 
 function App() {
   const location = useLocation();
   const hideNavbar =
-    ["/admin", "/registraions", "/allreguser", "/scanqr","/profile"].includes(
+    ["/admin", "/allreguser", "/scanqr", "/profile"].includes(
       location.pathname,
     ) || location.pathname.startsWith("/registrations/");
 
   return (
     <div>
       {!hideNavbar && <Navbar />}
-
 
       <Routes>
         <Route path="/" element={<Mainpage />} />
@@ -116,6 +117,8 @@ function App() {
         <Route path="/registraions" element={<Registrations />} />
 
         <Route path="/payment/:id" element={<Payment />} />
+        <Route path="/aboutus" element={<Aboutus />} />
+        <Route path="/contactus" element={<Contact />} />
       </Routes>
     </div>
   );

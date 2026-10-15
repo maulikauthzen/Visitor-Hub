@@ -3,11 +3,10 @@ import React, { useEffect, useState } from "react";
 import {
   CalendarDays,
   CircleAlert,
+  IndianRupee,
   LoaderCircle,
-  Phone,
   RefreshCw,
   Ticket,
-  IndianRupee,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -141,8 +140,65 @@ export default function Registrations() {
               </div>
               <Ticket className="h-5 w-5 text-[#477565]" aria-hidden="true" />
             </div>
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-1000px border-collapse text-left text-sm">
+            <div className="divide-y divide-[#edf0ed] lg:hidden">
+              {data.map((el, index) => (
+                <article
+                  key={el._id || el.id || `${el.event?.name}-${index}`}
+                  className="p-4 sm:p-5"
+                >
+                  <div className="flex min-w-0 items-start justify-between gap-3">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-[#e9f1eb] text-[#245a47]">
+                        <CalendarDays className="h-4 w-4" aria-hidden="true" />
+                      </span>
+                      <div className="min-w-0">
+                        <h3 className=" `wrap-break-word` font-semibold text-[#172923]">
+                          {el.event?.name || "Event"}
+                        </h3>
+                        <p className="mt-1  `wrap-break-word` text-sm text-[#53645b]">
+                          {el.attendeeName || "—"}
+                        </p>
+                      </div>
+                    </div>
+                    <span className="shrink-0 rounded-full bg-[#e9f3eb] px-2.5 py-1 text-xs font-semibold capitalize text-[#286244]">
+                      {el.status || "Registered"}
+                    </span>
+                  </div>
+
+                  <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 rounded-lg bg-[#f5f7f4] p-3 text-sm">
+                    <div>
+                      <dt className="text-xs text-[#718078]">Tickets</dt>
+                      <dd className="mt-1 font-medium text-[#34443c]">
+                        {el.quantity ?? "—"}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs text-[#718078]">Total</dt>
+                      <dd className="mt-1 inline-flex items-center font-semibold text-[#172923]">
+                        <IndianRupee className="mr-0.5 h-4 w-4" aria-hidden="true" />
+                        {el.amount ?? "—"}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs text-[#718078]">Registered</dt>
+                      <dd className="mt-1 text-[#53645b]">
+                        {formatDate(el.selectedDate)}
+                      </dd>
+                    </div>
+                    <div className="flex items-end justify-end">
+                      <Link
+                        to={`/view/${el.id}`}
+                        className="inline-flex min-h-10 items-center rounded-md px-3 font-semibold text-[#245a47] underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#245a47]"
+                      >
+                        View details
+                      </Link>
+                    </div>
+                  </dl>
+                </article>
+              ))}
+            </div>
+            <div className="hidden overflow-x-auto lg:block">
+              <table className="w-full min-w-225 border-collapse text-left text-sm">
                 <thead className="bg-[#f5f7f4] text-xs font-semibold uppercase tracking-wide text-[#617169]">
                   <tr>
                     <th scope="col" className="px-5 py-3">

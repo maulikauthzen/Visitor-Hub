@@ -242,18 +242,25 @@ export default function Viewregs() {
                   </p>
                 </div>
 
-                
-
                 <Users size={20} className="text-green-700" />
               </div>
 
-              <div>
+              {/* <div>
+                <p className="text-sm text-gray-500">Amount</p>
+
+                <p className="font-semibold text-gray-900">{state.amount}</p>
+              </div> */}
+              <div className="flex items-center justify-between border-b border-gray-100 pb-4">
+                <div>
                   <p className="text-sm text-gray-500">Amount</p>
 
                   <p className="font-semibold text-gray-900">
                     {state.amount}
                   </p>
                 </div>
+
+                <IndianRupee size={20} className="text-green-700" />
+              </div>
 
               <div className="flex items-center justify-between">
                 <div>

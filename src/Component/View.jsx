@@ -137,7 +137,7 @@ export default function View() {
   }
 
   return (
-    <main className="min-h-screen bg-[#f4f7f2] px-4 py-7 sm:px-6 sm:py-10 lg:px-8">
+    <main className="min-h-screen bg-[#f4f7f2] px-4 py-7 sm:px-6 sm:py-10 lg:px-8 mt-8">
       <div className="mx-auto max-w-6xl">
         <Link
           to="/registraions"
