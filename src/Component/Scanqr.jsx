@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowLeft,
@@ -49,7 +49,8 @@ export default function Scanqr() {
   const [verifying, setVerifying] = useState(false);
   const scannerRef = useRef(null);
   const processingRef = useRef(false);
-
+  const [count, setCount] = useState(null);
+  const [countError, setCountError] = useState("");
   async function stopScanner() {
     const scanner = scannerRef.current;
     if (!scanner?.isScanning) {
@@ -113,6 +114,7 @@ export default function Scanqr() {
       setMessageType(
         isValid === true ? "success" : isValid === false ? "error" : "info",
       );
+      void getScanCount();
     } catch (error) {
       const payload = error.response?.data;
       setResult(payload ? { data: payload, isValid: false } : null);
@@ -179,6 +181,27 @@ export default function Scanqr() {
     }
   }
 
+  const getScanCount = useCallback(async () => {
+    setCountError("");
+    try {
+      const response = await axios.get(
+        `${API_URL}/events/registrations/scan-count`,
+        getAuthConfig(),
+      );
+      const nextCount = Number(response.data?.count ?? response.data);
+      if (!Number.isInteger(nextCount) || nextCount < 0) {
+        throw new Error("The scan count response was not a valid count.");
+      }
+      setCount(nextCount);
+    } catch (error) {
+      setCountError(
+        error.response?.data?.message ||
+          error.message ||
+          "Unable to load the scan count.",
+      );
+    }
+  }, []);
+
   function resetScan() {
     setResult(null);
     setQrToken("");
@@ -187,6 +210,7 @@ export default function Scanqr() {
   }
 
   useEffect(() => {
+    void getScanCount();
     return () => {
       const scanner = scannerRef.current;
       if (scanner?.isScanning) {
@@ -198,7 +222,7 @@ export default function Scanqr() {
           });
       }
     };
-  }, []);
+  }, [getScanCount]);
 
   return (
     <main className="min-h-screen bg-[#f5f6fa] px-4 pb-10 pt-6 text-slate-900 sm:px-6 sm:pt-8 lg:px-10">
@@ -230,9 +254,23 @@ export default function Scanqr() {
             Verify a ticket
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500 sm:text-base">
-            Scan an attendee’s ticket QR code or enter the code manually to check
-            registration.
+            Scan an attendee’s ticket QR code or enter the code manually to
+            check registration.
           </p>
+          <div className="mt-4 inline-flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+            <Ticket size={18} className="text-indigo-600" />
+            <span className="text-sm font-medium text-slate-600">
+              Ticket scans
+            </span>
+            <span className="text-lg font-bold text-slate-900">
+              {count === null ? "—" : count}
+            </span>
+            {countError && (
+              <span role="alert" className="text-xs text-rose-600">
+                {countError}
+              </span>
+            )}
+          </div>
         </header>
 
         <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
@@ -302,7 +340,9 @@ export default function Scanqr() {
                   <Ticket size={19} />
                 </span>
                 <div>
-                  <h2 className="font-bold text-slate-900">Enter code manually</h2>
+                  <h2 className="font-bold text-slate-900">
+                    Enter code manually
+                  </h2>
                   <p className="mt-0.5 text-xs text-slate-500">
                     Camera unavailable? Paste or type the QR value.
                   </p>
@@ -317,7 +357,10 @@ export default function Scanqr() {
                   await verifyCode(qrToken);
                 }}
               >
-                <label htmlFor="qr-code" className="mb-2 block text-sm font-semibold text-slate-700">
+                <label
+                  htmlFor="qr-code"
+                  className="mb-2 block text-sm font-semibold text-slate-700"
+                >
                   QR code
                 </label>
                 <textarea
@@ -378,9 +421,12 @@ export default function Scanqr() {
                   )}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <h2 className="font-bold text-slate-900">Verification status</h2>
+                  <h2 className="font-bold text-slate-900">
+                    Verification status
+                  </h2>
                   <p className="mt-1  text-sm leading-5 text-slate-600">
-                    {message || "A ticket verification result will appear here."}
+                    {message ||
+                      "A ticket verification result will appear here."}
                   </p>
                 </div>
                 {result && (
@@ -399,7 +445,10 @@ export default function Scanqr() {
                 (typeof result.data === "object" ? (
                   <dl className="mt-4 grid gap-2 border-t border-black/5 pt-4 sm:grid-cols-2">
                     {Object.entries(result.data).map(([key, value]) => (
-                      <div key={key} className="min-w-0 rounded-lg bg-white/70 p-3">
+                      <div
+                        key={key}
+                        className="min-w-0 rounded-lg bg-white/70 p-3"
+                      >
                         <dt className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
                           {key.replace(/([A-Z])/g, " $1")}
                         </dt>

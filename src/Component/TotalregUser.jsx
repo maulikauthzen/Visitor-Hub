@@ -7,6 +7,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Search,
+  Trash2,
   Ticket,
   Users,
 } from "lucide-react";
@@ -46,6 +47,7 @@ export default function TotalregUser() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [deletingId, setDeletingId] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
   const requestedPage = Number(searchParams.get("page")) || 1;
 
@@ -143,12 +145,37 @@ export default function TotalregUser() {
     setPage(1);
   }
 
-  const registrationLink = (registration) => `/reguser/${registration.id}`;
+  const registrationLink = (registration) =>
+    `/reguser/${registration._id || registration.id}`;
   const startCount = filteredRegistrations.length === 0 ? 0 : startIndex + 1;
   const endCount = Math.min(
     startIndex + PAGE_SIZE,
     filteredRegistrations.length,
   );
+
+  async function deleteregs(registrationId) {
+    if (!registrationId) {
+      setError("This registration cannot be deleted because its ID is missing.");
+      return;
+    }
+    if (!window.confirm("Move this registration to the deleted archive?")) {
+      return;
+    }
+
+    setDeletingId(registrationId);
+    setError("");
+    try {
+      await axios.delete(
+        `${API_URL}/events/registrations/${registrationId}`,
+        authConfig(),
+      );
+      await loadRegistrations();
+    } catch (requestError) {
+      setError(getErrorMessage(requestError));
+    } finally {
+      setDeletingId("");
+    }
+  }
 
   return (
     <main className="min-h-screen bg-[#f5f6fa] px-4 pb-10 pt-6 text-slate-900 sm:px-6 sm:pt-8 lg:px-10">
@@ -280,6 +307,7 @@ export default function TotalregUser() {
                 {visibleRegistrations.map((registration, index) => (
                   <article
                     key={
+                      registration._id ||
                       registration.id ||
                       `${registration.email}-${startIndex + index}`
                     }
@@ -331,6 +359,19 @@ export default function TotalregUser() {
                       View registration
                       <ArrowRight size={15} />
                     </Link>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        deleteregs(registration._id || registration.id)
+                      }
+                      disabled={Boolean(deletingId)}
+                      className="mt-2 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-lg border border-rose-200 text-sm font-semibold text-rose-700 transition hover:bg-rose-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600 focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-60"
+                    >
+                      <Trash2 size={15} />
+                      {deletingId === (registration._id || registration.id)
+                        ? "Moving..."
+                        : "Delete registration"}
+                    </button>
                   </article>
                 ))}
               </div>
@@ -360,12 +401,19 @@ export default function TotalregUser() {
                       >
                         Details
                       </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3.5 text-right font-bold"
+                      >
+                        Delete
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {visibleRegistrations.map((registration, index) => (
                       <tr
                         key={
+                          registration._id ||
                           registration.id ||
                           `${registration.email}-${startIndex + index}`
                         }
@@ -400,6 +448,19 @@ export default function TotalregUser() {
                           >
                             View <ArrowRight size={14} />
                           </Link>
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-4">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              deleteregs(registration._id || registration.id)
+                            }
+                            disabled={Boolean(deletingId)}
+                            className="inline-flex min-h-10 items-center gap-1.5 rounded-lg px-3 text-xs font-semibold text-rose-700 transition hover:bg-rose-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600 focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-60"
+                          >
+                            <Trash2 size={14} />
+                            Delete
+                          </button>
                         </td>
                       </tr>
                     ))}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { LogOut, Menu, ShieldCheck, UserRound, X } from "lucide-react";
 import axios from "axios";
+import { getTokenRole } from "../lib/auth";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -9,14 +10,15 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [profile, setProfile] = useState({});
   const token = localStorage.getItem("token");
-  const role = localStorage.getItem("role");
+  const role = getTokenRole(token);
+  const isAuthenticated = Boolean(role);
 
   useEffect(() => {
     setMenuOpen(false);
   }, [location.pathname, location.hash]);
 
   useEffect(() => {
-    if (!token) {
+    if (!isAuthenticated) {
       setProfile({});
       return;
     }
@@ -29,7 +31,7 @@ export default function Navbar() {
       .catch((error) => {
         console.error("Unable to load profile for navbar:", error);
       });
-  }, [token]);
+  }, [isAuthenticated, token]);
 
   useEffect(() => {
     if (!menuOpen) return undefined;
@@ -56,7 +58,7 @@ export default function Navbar() {
 
 
     
-    ...(token
+    ...(isAuthenticated
       ? [
           {
             label: "My events",
@@ -124,7 +126,7 @@ export default function Navbar() {
           </div>
 
           <div className="hidden shrink-0 items-center gap-2 lg:flex">
-            {token ? (
+            {isAuthenticated ? (
               <>
                 <Link
                   to="/profile"
@@ -238,7 +240,7 @@ export default function Navbar() {
             </ul>
 
             <div className="mt-3 border-t border-[#17352b]/8 pt-3">
-              {token ? (
+              {isAuthenticated ? (
                 <div className="space-y-1">
                   <Link
                     to="/profile"

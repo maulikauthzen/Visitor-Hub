@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { getTokenRole } from "../lib/auth";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -25,32 +26,29 @@ export default function Login() {
         password: state.password,
       });
 
-      console.log("LOGIN RESPONSE:", res.data);
-
-      if (!res.data.success) {
-        alert(res.data.message || "Login failed");
+      const token = res.data.token;
+      if (!token) {
+        alert(
+          res.data.message || "Login failed: the server did not return a token.",
+        );
         return;
       }
 
-      const token = res.data.token;
-      const role = res.data.role;
+      const role = getTokenRole(token);
+      if (!role) {
+        alert("Login failed: the server returned an invalid or expired token.");
+        return;
+      }
 
       localStorage.setItem("token", token);
-      localStorage.setItem("role", role);
-
-      // alert(res.data.message || "Login successful");
+      localStorage.removeItem("role");
 
       if (role === "admin") {
         navigate("/admin", { replace: true });
-        alert("welcome admin");
       } else {
         navigate("/", { replace: true });
-        alert("welcome user");
       }
     } catch (error) {
-      console.log("LOGIN ERROR:", error);
-      console.log("BACKEND RESPONSE:", error.response?.data);
-
       alert(error.response?.data?.message || "Login failed");
     }
   };

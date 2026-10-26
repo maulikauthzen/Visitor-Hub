@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 
 import Landingpage from "./Component/Landingpage";
@@ -27,13 +27,26 @@ import View from "./Component/View";
 import Scanqr from "./Component/Scanqr";
 import Aboutus from "./Component/Aboutus";
 import Contact from "./Component/Contact";
+import Deletedevents from "./Component/Deletedevents";
+import Deletedpass from "./Component/Deletedpass";
+import Deletedregs from "./Component/Deletedregs";
+import Deletedthings from "./Component/Deletedthings";
 
 function App() {
   const location = useLocation();
   const hideNavbar =
-    ["/admin", "/allreguser", "/scanqr", "/profile"].includes(
-      location.pathname,
-    ) || location.pathname.startsWith("/registrations/");
+    [
+      "/admin",
+      "/allreguser",
+      "/scanqr",
+      "/profile",
+      "/deletedevents",
+      "/deletedpass",
+      "/deletedregs",
+      "/registraions",
+    ].includes(location.pathname) ||
+    location.pathname.startsWith("/registrations/") ||
+    location.pathname.startsWith("/deletedthings");
 
   return (
     <div>
@@ -76,6 +89,41 @@ function App() {
             </Protectedroute>
           }
         />
+
+        {/* <Route
+          path="/deletedevents"
+          element={
+            <Protectedroute allowedRole={["admin"]}>
+              <Deletedevents />
+            </Protectedroute>
+          }
+        /> */}
+        {/* <Route
+          path="/deletedpass"
+          element={
+            <Protectedroute allowedRole={["admin"]}>
+              <Deletedpass />
+            </Protectedroute>
+          }
+        /> */}
+
+        <Route
+          path="/deletedthings"
+          element={
+            <Protectedroute allowedRole={["admin"]}>
+              <Deletedthings />
+            </Protectedroute>
+          }
+        >
+          <Route index element={<Navigate to="events" replace />} />
+
+          <Route path="events" element={<Deletedevents />} />
+
+          <Route path="passes" element={<Deletedpass />} />
+
+          <Route path="registrations" element={<Deletedregs />} />
+        </Route>
+        
 
         <Route
           path="/regstrationform/:id"

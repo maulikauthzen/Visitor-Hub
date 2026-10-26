@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   ArrowDownUp,
   ArrowRight,
@@ -90,6 +90,7 @@ function formatTime(value) {
 
 function Adminpnanel() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [events, setEvents] = useState([]);
   const [summary, setSummary] = useState({});
   const [form, setForm] = useState(EMPTY_EVENT);
@@ -289,8 +290,7 @@ function Adminpnanel() {
     },
     {
       label: "Active events",
-      value:
-        summary.activeEvents ?? events.filter((item) => item.isActive).length,
+      value:summary.activeEvents ?? events.filter((item) => item.isActive).length,
       note: "Currently published",
       icon: CheckCircle2,
       tone: "emerald",
@@ -421,6 +421,22 @@ function Adminpnanel() {
               Scan tickets
               <ArrowRight className="ml-auto" size={15} />
             </button>
+            <Link
+              to="/deletedthings/events"
+              onClick={() => setMobileNavOpen(false)}
+              aria-current={
+                location.pathname.startsWith("/deletedthings") ? "page" : undefined
+              }
+              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
+                location.pathname.startsWith("/deletedthings")
+                  ? "bg-indigo-50 text-indigo-700"
+                  : "text-slate-600 hover:bg-slate-50 hover:text-slate-950"
+              }`}
+            >
+              <Trash2 size={18} />
+              Deleted items
+              <ArrowRight className="ml-auto" size={15} />
+            </Link>
           </nav>
         </div>
 

@@ -1,12 +1,12 @@
 import axios from "axios";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
   CheckCircle2,
   Mail,
-  MapPin,
   Search,
+  Trash2,
   Ticket,
   Users,
 } from "lucide-react";
@@ -28,8 +28,9 @@ export default function Registreduser() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [deletingId, setDeletingId] = useState("");
 
-  async function loadRegistrations() {
+  const loadRegistrations = useCallback(async () => {
     setLoading(true);
     setError("");
     try {
@@ -38,7 +39,9 @@ export default function Registreduser() {
         getAuthConfig(),
       );
       if (!Array.isArray(response.data)) {
-        throw new Error("The registrations response was not in the expected format.");
+        throw new Error(
+          "The registrations response was not in the expected format.",
+        );
       }
       setRegistrations(response.data);
     } catch (requestError) {
@@ -50,17 +53,24 @@ export default function Registreduser() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [id]);
 
   useEffect(() => {
     loadRegistrations();
-  }, [id]);
+  }, [loadRegistrations]);
 
   const filteredUsers = useMemo(() => {
     const query = search.trim().toLowerCase();
     if (!query) return registrations;
     return registrations.filter((user) =>
-      [user.attendeeName, user.email, user.phone, user.mobile, user.pass?.name, user.passName]
+      [
+        user.attendeeName,
+        user.email,
+        user.phone,
+        user.mobile,
+        user.pass?.name,
+        user.passName,
+      ]
         .filter(Boolean)
         .some((value) => String(value).toLowerCase().includes(query)),
     );
@@ -70,6 +80,33 @@ export default function Registreduser() {
     (total, user) => total + (Number(user.quantity) || 0),
     0,
   );
+  async function deleteregs(registrationId) {
+    if (!registrationId) {
+      setError("This registration cannot be deleted because its ID is missing.");
+      return;
+    }
+    if (!window.confirm("Move this registration to the deleted archive?")) {
+      return;
+    }
+
+    setDeletingId(registrationId);
+    setError("");
+    try {
+      await axios.delete(
+        `${API_URL}/events/registrations/${registrationId}`,
+        getAuthConfig(),
+      );
+      await loadRegistrations();
+    } catch (requestError) {
+      setError(
+        requestError.response?.data?.message ||
+          requestError.message ||
+          "Unable to delete this registration. Please try again.",
+      );
+    } finally {
+      setDeletingId("");
+    }
+  }
 
   return (
     <main className="min-h-screen bg-[#f5f6fa] px-4 pb-10 pt-6 text-slate-900 sm:px-6 sm:pt-8 lg:px-10">
@@ -162,7 +199,9 @@ export default function Registreduser() {
             <div>
               <h2 className="font-bold text-slate-900">Attendee list</h2>
               <p className="mt-1 text-xs text-slate-500">
-                {loading ? "Loading attendees..." : `${filteredUsers.length} matching attendees`}
+                {loading
+                  ? "Loading attendees..."
+                  : `${filteredUsers.length} matching attendees`}
               </p>
             </div>
             <span className="inline-flex items-center gap-2 text-xs font-medium text-slate-500">
@@ -182,7 +221,9 @@ export default function Registreduser() {
                 <Users size={22} />
               </span>
               <p className="font-semibold text-slate-800">
-                {registrations.length ? "No matching attendees" : "No registrations yet"}
+                {registrations.length
+                  ? "No matching attendees"
+                  : "No registrations yet"}
               </p>
               <p className="mt-1 text-sm text-slate-500">
                 {registrations.length
@@ -195,7 +236,7 @@ export default function Registreduser() {
               <div className="divide-y divide-slate-100 lg:hidden">
                 {filteredUsers.map((user, index) => (
                   <article
-                    key={user.id || `${user.email}-${index}`}
+                    key={user._id || user.id || `${user.email}-${index}`}
                     className="p-4 sm:p-5"
                   >
                     <div className="flex items-start justify-between gap-3">
@@ -237,6 +278,25 @@ export default function Registreduser() {
                         </span>
                       </div>
                     </div>
+                    <div className="mt-3 grid grid-cols-2 gap-2">
+                      <Link
+                        to={`/reguser/${user._id || user.id}`}
+                        className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-slate-200 px-3 text-sm font-semibold text-indigo-700 transition hover:bg-indigo-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2"
+                      >
+                        View details <ArrowRight size={15} />
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => deleteregs(user._id || user.id)}
+                        disabled={Boolean(deletingId)}
+                        className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-rose-200 px-3 text-sm font-semibold text-rose-700 transition hover:bg-rose-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600 focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-60"
+                      >
+                        <Trash2 size={15} />
+                        {deletingId === (user._id || user.id)
+                          ? "Moving..."
+                          : "Delete"}
+                      </button>
+                    </div>
                   </article>
                 ))}
               </div>
@@ -245,28 +305,59 @@ export default function Registreduser() {
                 <table className="w-full min-w-212.5 text-left text-sm">
                   <thead className="bg-slate-50 text-[11px] uppercase tracking-wider text-slate-500">
                     <tr>
-                      <th scope="col" className="px-6 py-3.5 font-bold">#</th>
-                      <th scope="col" className="px-4 py-3.5 font-bold">Attendee</th>
-                      <th scope="col" className="px-4 py-3.5 font-bold">Phone</th>
-                      <th scope="col" className="px-4 py-3.5 font-bold">Pass</th>
-                      <th scope="col" className="px-4 py-3.5 font-bold">Status</th>
-                      <th scope="col" className="px-6 py-3.5 text-right font-bold">Quantity</th>
+                      <th scope="col" className="px-6 py-3.5 font-bold">
+                        #
+                      </th>
+                      <th scope="col" className="px-4 py-3.5 font-bold">
+                        Attendee
+                      </th>
+                      <th scope="col" className="px-4 py-3.5 font-bold">
+                        Phone
+                      </th>
+                      <th scope="col" className="px-4 py-3.5 font-bold">
+                        Pass
+                      </th>
+                      <th scope="col" className="px-4 py-3.5 font-bold">
+                        Status
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3.5 text-right font-bold"
+                      >
+                        Quantity
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3.5 text-right font-bold"
+                      >
+                        view
+                      </th>
+                       <th
+                        scope="col"
+                        className="px-6 py-3.5 text-right font-bold"
+                      >
+                        Delete
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {filteredUsers.map((user, index) => (
                       <tr
-                        key={user.id || `${user.email}-${index}`}
+                        key={user._id || user.id || `${user.email}-${index}`}
                         className="transition hover:bg-slate-50/70"
                       >
-                        <td className="px-6 py-4 text-slate-400">{index + 1}</td>
+                        <td className="px-6 py-4 text-slate-400">
+                          {index + 1}
+                        </td>
                         <td className="max-w-72 px-4 py-4">
                           <p className="truncate font-semibold text-slate-900">
                             {user.attendeeName || "Guest"}
                           </p>
                           <p className="mt-1 inline-flex max-w-full items-center gap-1 truncate text-xs text-slate-500">
                             <Mail size={12} className="shrink-0" />
-                            <span className="truncate">{user.email || "No email provided"}</span>
+                            <span className="truncate">
+                              {user.email || "No email provided"}
+                            </span>
                           </p>
                         </td>
                         <td className="px-4 py-4 text-slate-600">
@@ -284,6 +375,25 @@ export default function Registreduser() {
                         <td className="px-6 py-4 text-right font-semibold text-slate-800">
                           {user.quantity ?? "—"}
                         </td>
+                        <td className="px-6 py-4 text-right font-semibold text-slate-800">
+                          <Link
+                            to={`/reguser/${user._id || user.id}`}
+                            className="inline-flex min-h-10 items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold text-indigo-700 transition hover:bg-indigo-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2"
+                          >
+                            View <ArrowRight size={14} />
+                          </Link>
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-4">
+                          <button
+                            type="button"
+                            onClick={() => deleteregs(user._id || user.id)}
+                            disabled={Boolean(deletingId)}
+                            className="inline-flex min-h-10 items-center gap-1.5 rounded-lg px-3 text-xs font-semibold text-rose-700 transition hover:bg-rose-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600 focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-60"
+                          >
+                            <Trash2 size={14} />
+                            Delete
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -293,7 +403,8 @@ export default function Registreduser() {
           )}
 
           <footer className="border-t border-slate-100 px-5 py-4 text-xs text-slate-500 sm:px-6">
-            Showing {filteredUsers.length} of {registrations.length} attendee registrations
+            Showing {filteredUsers.length} of {registrations.length} attendee
+            registrations
           </footer>
         </section>
       </div>
