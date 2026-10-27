@@ -375,20 +375,20 @@ export default function Registreduser() {
                         <td className="px-6 py-4 text-right font-semibold text-slate-800">
                           {user.quantity ?? "—"}
                         </td>
-                        <td className="px-6 py-4 text-right font-semibold text-slate-800">
+                        <td className="px-6 py-4 text-right">
                           <Link
                             to={`/reguser/${user._id || user.id}`}
-                            className="inline-flex min-h-10 items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold text-indigo-700 transition hover:bg-indigo-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2"
+                            className="inline-flex min-h-10 min-w-20 items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold text-indigo-700 transition hover:bg-indigo-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2"
                           >
                             View <ArrowRight size={14} />
                           </Link>
                         </td>
-                        <td className="whitespace-nowrap px-4 py-4">
+                        <td className="whitespace-nowrap px-6 py-4 text-right">
                           <button
                             type="button"
                             onClick={() => deleteregs(user._id || user.id)}
                             disabled={Boolean(deletingId)}
-                            className="inline-flex min-h-10 items-center gap-1.5 rounded-lg px-3 text-xs font-semibold text-rose-700 transition hover:bg-rose-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600 focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-60"
+                            className="inline-flex min-h-10 min-w-20 items-center justify-center gap-1.5 rounded-lg px-3 text-xs font-semibold text-rose-700 transition hover:bg-rose-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600 focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-60"
                           >
                             <Trash2 size={14} />
                             Delete

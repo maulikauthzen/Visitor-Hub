@@ -290,7 +290,8 @@ function Adminpnanel() {
     },
     {
       label: "Active events",
-      value:summary.activeEvents ?? events.filter((item) => item.isActive).length,
+      value:
+        summary.activeEvents ?? events.filter((item) => item.isActive).length,
       note: "Currently published",
       icon: CheckCircle2,
       tone: "emerald",
@@ -425,7 +426,9 @@ function Adminpnanel() {
               to="/deletedthings/events"
               onClick={() => setMobileNavOpen(false)}
               aria-current={
-                location.pathname.startsWith("/deletedthings") ? "page" : undefined
+                location.pathname.startsWith("/deletedthings")
+                  ? "page"
+                  : undefined
               }
               className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
                 location.pathname.startsWith("/deletedthings")
@@ -929,34 +932,43 @@ function Adminpnanel() {
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                      <Link
+                        to={`/registrations/${event.id}`}
+                        className="inline-flex min-h-10 min-w-0 items-center justify-center gap-2 rounded-lg bg-indigo-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500/20"
+                      >
+                        <Users size={14} />
+                        Registrations
+                      </Link>
                       <Link
                         to={`/passes/${event.id}`}
-                        className="inline-flex min-h-10 flex-1 items-center justify-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-700"
+                        className="inline-flex min-h-10 min-w-0 items-center justify-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500/10"
                       >
                         View passes <Ticket size={14} />
                       </Link>
-                      <button
-                        type="button"
-                        onClick={() => openEditForm(event)}
-                        aria-label={`Edit ${event.name}`}
-                        className="grid size-10 shrink-0 place-items-center rounded-lg border border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-700"
-                      >
-                        <CalendarDays size={16} />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => deleteEvent(event.id)}
-                        disabled={deletingId === event.id}
-                        aria-label={`Delete ${event.name}`}
-                        className="grid size-10 shrink-0 place-items-center rounded-lg border border-slate-200 text-slate-500 hover:bg-rose-50 hover:text-rose-600 disabled:opacity-50"
-                      >
-                        {deletingId === event.id ? (
-                          <span className="size-4 animate-spin rounded-full border-2 border-rose-200 border-t-rose-600" />
-                        ) : (
-                          <Trash2 size={16} />
-                        )}
-                      </button>
+                      <div className="col-span-full flex justify-end gap-2">
+                        <button
+                          type="button"
+                          onClick={() => openEditForm(event)}
+                          aria-label={`Edit ${event.name}`}
+                          className="grid size-10 shrink-0 place-items-center rounded-lg border border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-700"
+                        >
+                          <CalendarDays size={16} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => deleteEvent(event.id)}
+                          disabled={deletingId === event.id}
+                          aria-label={`Delete ${event.name}`}
+                          className="grid size-10 shrink-0 place-items-center rounded-lg border border-slate-200 text-slate-500 hover:bg-rose-50 hover:text-rose-600 disabled:opacity-50"
+                        >
+                          {deletingId === event.id ? (
+                            <span className="size-4 animate-spin rounded-full border-2 border-rose-200 border-t-rose-600" />
+                          ) : (
+                            <Trash2 size={16} />
+                          )}
+                        </button>
+                      </div>
                     </div>
                   </article>
                 ))
@@ -987,24 +999,27 @@ function Adminpnanel() {
               )}
             </div>
 
-            <div className="hidden overflow-x-auto xl:block">
-              <table className="w-full min-w-212.5 text-left text-sm">
+            <div className="hidden xl:block">
+              <table className="w-full table-fixed text-left text-sm">
                 <thead className="bg-slate-50/80 text-[11px] uppercase tracking-[0.12em] text-slate-500">
                   <tr>
-                    <th scope="col" className="px-7 py-4 font-bold">
+                    <th scope="col" className="w-[21%] px-4 py-4 font-bold">
                       Event
                     </th>
-                    <th scope="col" className="px-4 py-4 font-bold">
+                    <th scope="col" className="w-[22%] px-3 py-4 font-bold">
                       Schedule
                     </th>
-                    <th scope="col" className="px-4 py-4 font-bold">
+                    <th scope="col" className="w-[15%] px-3 py-4 font-bold">
                       Location
                     </th>
-                    <th scope="col" className="px-4 py-4 font-bold">
+                    <th scope="col" className="w-[12%] px-3 py-4 font-bold">
                       Status
                     </th>
-                    <th scope="col" className="px-7 py-4 text-right font-bold">
+                    <th scope="col" className="w-[17%] px-3 py-4 text-right font-bold">
                       Actions
+                    </th>
+                    <th scope="col" className="w-[13%] px-3 py-4 text-right font-bold">
+                      Registrations
                     </th>
                   </tr>
                 </thead>
@@ -1012,7 +1027,7 @@ function Adminpnanel() {
                   {eventsLoading ? (
                     <tr>
                       <td
-                        colSpan={5}
+                        colSpan={6}
                         className="px-7 py-16 text-center text-sm text-slate-500"
                       >
                         <span className="mx-auto mb-3 block size-6 animate-spin rounded-full border-2 border-indigo-200 border-t-indigo-600" />
@@ -1025,20 +1040,15 @@ function Adminpnanel() {
                         key={event.id}
                         className="group transition hover:bg-slate-50/70"
                       >
-                        <td className="max-w-75 px-7 py-5">
-                          <Link
-                            to={`/registrations/${event.id}`}
-                            className="block"
-                          >
-                            <p className="truncate font-semibold text-slate-900 transition group-hover:text-indigo-700">
-                              {event.name || "Untitled event"}
-                            </p>
-                            <p className="mt-1 truncate text-xs text-slate-500">
-                              {event.description || "No description"}
-                            </p>
-                          </Link>
+                        <td className="px-4 py-5">
+                          <p className="truncate font-semibold text-slate-900 transition ">
+                            {event.name || "Untitled event"}
+                          </p>
+                          <p className="mt-1 truncate text-xs text-slate-500">
+                            {event.description || "No description"}
+                          </p>
                         </td>
-                        <td className="whitespace-nowrap px-4 py-5 text-slate-700">
+                        <td className="px-3 py-5 text-slate-700">
                           <p className="font-medium">
                             {formatDate(event.startDate)}
                             {formatTime(event.startDate) && (
@@ -1053,18 +1063,18 @@ function Adminpnanel() {
                               ` · ${formatTime(event.endDate)}`}
                           </p>
                         </td>
-                        <td className="max-w-55 px-4 py-5 text-slate-600">
-                          <span className="flex items-center gap-2">
+                        <td className="px-3 py-5 text-slate-600">
+                          <span className="flex min-w-0 items-center gap-2">
                             <MapPin
                               size={15}
                               className="shrink-0 text-indigo-500"
                             />
-                            <span className="truncate">
+                            <span className="min-w-0 truncate">
                               {event.location || "Not specified"}
                             </span>
                           </span>
                         </td>
-                        <td className="px-4 py-5">
+                        <td className="px-3 py-5">
                           <span
                             className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${
                               event.isActive
@@ -1082,13 +1092,13 @@ function Adminpnanel() {
                             {event.isActive ? "Active" : "Inactive"}
                           </span>
                         </td>
-                        <td className="px-7 py-5">
-                          <div className="flex items-center justify-end gap-1.5">
+                        <td className="px-3 py-5">
+                          <div className="flex items-center justify-end gap-0.5">
                             <Link
                               to={`/passes/${event.id}`}
                               aria-label={`View passes for ${event.name}`}
                               title="View passes"
-                              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-2.5 py-2 text-xs font-semibold text-slate-600 transition hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-700"
+                              className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-slate-200 px-2 py-2 text-xs font-semibold text-slate-600 transition hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-700"
                             >
                               Passes <Ticket size={14} />
                             </Link>
@@ -1097,7 +1107,7 @@ function Adminpnanel() {
                               onClick={() => openEditForm(event)}
                               aria-label={`Edit ${event.name}`}
                               title="Edit event"
-                              className="rounded-lg p-2 text-slate-500 transition hover:bg-indigo-50 hover:text-indigo-700"
+                              className="shrink-0 rounded-lg p-2 text-slate-500 transition hover:bg-indigo-50 hover:text-indigo-700"
                             >
                               <CalendarDays size={16} />
                             </button>
@@ -1107,7 +1117,7 @@ function Adminpnanel() {
                               disabled={deletingId === event.id}
                               aria-label={`Delete ${event.name}`}
                               title="Delete event"
-                              className="rounded-lg p-2 text-slate-400 transition hover:bg-rose-50 hover:text-rose-600 disabled:opacity-50"
+                              className="shrink-0 rounded-lg p-2 text-slate-400 transition hover:bg-rose-50 hover:text-rose-600 disabled:opacity-50"
                             >
                               {deletingId === event.id ? (
                                 <span className="block size-4 animate-spin rounded-full border-2 border-rose-200 border-t-rose-600" />
@@ -1117,11 +1127,20 @@ function Adminpnanel() {
                             </button>
                           </div>
                         </td>
+                        <td className="px-3 py-5 text-right">
+                          <Link
+                            to={`/registrations/${event.id}`}
+                            className="inline-flex min-h-10 max-w-full items-center justify-center gap-1 whitespace-nowrap rounded-lg bg-indigo-50 px-2 py-2 text-xs font-semibold text-indigo-700 transition hover:bg-indigo-100 focus:outline-none focus:ring-4 focus:ring-indigo-500/20"
+                          >
+                            View
+                            <ArrowRight size={14} />
+                          </Link>
+                        </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={5} className="px-7 py-16 text-center">
+                      <td colSpan={6} className="px-7 py-16 text-center">
                         <span className="mx-auto mb-3 grid size-12 place-items-center rounded-2xl bg-slate-100 text-slate-400">
                           <CalendarDays size={22} />
                         </span>

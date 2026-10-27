@@ -142,8 +142,8 @@ export default function Viewregs() {
           </div>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          <div className="rounded-2xl bg-white p-6 shadow-sm">
+        <div className="grid items-stretch gap-6 lg:grid-cols-2">
+          <div className="flex h-full flex-col rounded-2xl bg-white p-6 shadow-sm">
             <div className="mb-6 flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-green-100 text-green-700">
                 <User size={22} />
@@ -158,42 +158,46 @@ export default function Viewregs() {
               </div>
             </div>
 
-            <div className="space-y-5">
-              <div className="flex items-center gap-4 border-b border-gray-100 pb-4">
+            <div className="flex flex-1 flex-col justify-between">
+              <div className="flex min-h-20 items-center gap-4 border-b border-gray-100 py-4">
                 <User size={19} className="text-gray-400" />
 
-                <div>
+                <div className="min-w-0">
                   <p className="text-sm text-gray-500">Full Name</p>
 
-                  <p className="font-semibold text-gray-900">
+                  <p className="wrap-break-word font-semibold text-gray-900">
                     {state.attendeeName}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 border-b border-gray-100 pb-4">
+              <div className="flex min-h-20 items-center gap-4 border-b border-gray-100 py-4">
                 <Mail size={19} className="text-gray-400" />
 
-                <div>
+                <div className="min-w-0">
                   <p className="text-sm text-gray-500">Email</p>
 
-                  <p className="font-semibold text-gray-900">{state.email}</p>
+                  <p className="break-all font-semibold text-gray-900">
+                    {state.email}
+                  </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4">
+              <div className="flex min-h-20 items-center gap-4 py-4">
                 <Phone size={19} className="text-gray-400" />
 
-                <div>
+                <div className="min-w-0">
                   <p className="text-sm text-gray-500">Phone</p>
 
-                  <p className="font-semibold text-gray-900">{state.phone}</p>
+                  <p className="wrap-break-word font-semibold text-gray-900">
+                    {state.phone}
+                  </p>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="rounded-2xl bg-white p-6 shadow-sm">
+          <div className="flex h-full flex-col rounded-2xl bg-white p-6 shadow-sm">
             <div className="mb-6 flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-green-100 text-green-700">
                 <Ticket size={22} />
@@ -208,7 +212,7 @@ export default function Viewregs() {
               </div>
             </div>
 
-            <div className="space-y-5">
+            <div className="flex-1 space-y-5">
               <div className="flex items-center justify-between border-b border-gray-100 pb-4">
                 <div>
                   <p className="text-sm text-gray-500">Pass Name</p>
@@ -268,6 +272,18 @@ export default function Viewregs() {
 
                   <p className="font-semibold text-gray-900">
                     {formatDate(state.selectedDate)}
+                  </p>
+                </div>
+
+                <CalendarDays size={20} className="text-green-700" />
+              </div>
+
+               <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-500">Register Date</p>
+
+                  <p className="font-semibold text-gray-900">
+                    {formatDate(state.updatedAt)}
                   </p>
                 </div>
 

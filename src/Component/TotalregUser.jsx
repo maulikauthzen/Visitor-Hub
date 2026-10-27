@@ -303,7 +303,7 @@ export default function TotalregUser() {
             </div>
           ) : (
             <>
-              <div className="divide-y divide-slate-100 lg:hidden">
+              <div className="grid gap-3 p-3 sm:grid-cols-2 sm:gap-4 sm:p-4 lg:hidden">
                 {visibleRegistrations.map((registration, index) => (
                   <article
                     key={
@@ -311,7 +311,7 @@ export default function TotalregUser() {
                       registration.id ||
                       `${registration.email}-${startIndex + index}`
                     }
-                    className="p-4 sm:p-5"
+                    className="min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-indigo-200 hover:shadow-md sm:p-5"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
@@ -326,7 +326,7 @@ export default function TotalregUser() {
                         Registered
                       </span>
                     </div>
-                    <div className="mt-4 grid grid-cols-2 gap-3 rounded-xl bg-slate-50 p-3 text-xs">
+                    <div className="mt-4 grid min-w-0 grid-cols-2 gap-3 rounded-xl bg-slate-50 p-3 text-xs">
                       <div className="min-w-0">
                         <p className="text-slate-400">Event</p>
                         <p className="mt-1 truncate font-medium text-slate-700">
@@ -354,7 +354,7 @@ export default function TotalregUser() {
                     </div>
                     <Link
                       to={registrationLink(registration)}
-                      className="mt-3 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-lg border border-slate-200 text-sm font-semibold text-indigo-700 hover:bg-indigo-50"
+                      className="mt-3 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-lg border border-slate-200 px-3 text-sm font-semibold text-indigo-700 transition hover:bg-indigo-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2"
                     >
                       View registration
                       <ArrowRight size={15} />
@@ -365,7 +365,7 @@ export default function TotalregUser() {
                         deleteregs(registration._id || registration.id)
                       }
                       disabled={Boolean(deletingId)}
-                      className="mt-2 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-lg border border-rose-200 text-sm font-semibold text-rose-700 transition hover:bg-rose-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600 focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-60"
+                      className="mt-2 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-lg border border-rose-200 bg-white px-3 text-sm font-semibold text-rose-700 transition hover:bg-rose-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600 focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-60"
                     >
                       <Trash2 size={15} />
                       {deletingId === (registration._id || registration.id)
@@ -449,14 +449,14 @@ export default function TotalregUser() {
                             View <ArrowRight size={14} />
                           </Link>
                         </td>
-                        <td className="whitespace-nowrap px-4 py-4">
+                        <td className="whitespace-nowrap px-6 py-4 text-right">
                           <button
                             type="button"
                             onClick={() =>
                               deleteregs(registration._id || registration.id)
                             }
                             disabled={Boolean(deletingId)}
-                            className="inline-flex min-h-10 items-center gap-1.5 rounded-lg px-3 text-xs font-semibold text-rose-700 transition hover:bg-rose-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600 focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-60"
+                            className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-lg border border-rose-200 bg-white px-3 text-xs font-semibold text-rose-700 transition hover:border-rose-300 hover:bg-rose-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600 focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-60"
                           >
                             <Trash2 size={14} />
                             Delete
