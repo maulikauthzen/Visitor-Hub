@@ -1,3 +1,4 @@
+import { API_URL } from "../lib/api";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -16,7 +17,7 @@ export default function Maadhar() {
 
     axios
       .get(
-        `http://192.168.1.64:3000/auth/verification/${sessionId}/qr`,
+        `${API_URL}/auth/verification/${sessionId}/qr`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

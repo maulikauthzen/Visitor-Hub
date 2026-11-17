@@ -13,7 +13,7 @@ import {
   Users,
 } from "lucide-react";
 
-const API_URL = "http://192.168.1.64:3000";
+import { API_URL } from "../lib/api";
 
 function authConfig() {
   return {

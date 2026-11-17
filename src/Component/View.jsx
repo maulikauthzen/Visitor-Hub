@@ -1,3 +1,4 @@
+import { API_URL } from "../lib/api";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
@@ -33,7 +34,7 @@ export default function View() {
     setError(false);
 
     axios
-      .get(`http://192.168.1.64:3000/user/registered-events/${id}`, {
+      .get(`${API_URL}/user/registered-events/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

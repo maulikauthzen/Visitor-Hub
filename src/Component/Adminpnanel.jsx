@@ -10,6 +10,8 @@ import {
   Check,
   CheckCircle2,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   Clock3,
   LayoutDashboard,
   MapPin,
@@ -24,8 +26,7 @@ import {
   Users,
   X,
 } from "lucide-react";
-
-const API_URL = "http://192.168.1.64:3000";
+import { API_URL } from "../lib/api";
 
 const EMPTY_EVENT = {
   name: "",
@@ -36,6 +37,7 @@ const EMPTY_EVENT = {
   startTime: "",
   endTime: "",
 };
+const EVENTS_PER_PAGE = 8;
 
 const inputClass =
   "w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10";
@@ -98,6 +100,7 @@ function Adminpnanel() {
   const [formOpen, setFormOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [eventPage, setEventPage] = useState(1);
   const [eventsLoading, setEventsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -279,6 +282,20 @@ function Adminpnanel() {
       return searchable && matchesStatus;
     });
   }, [events, search, statusFilter]);
+  const totalEventPages = Math.max(
+    1,
+    Math.ceil(filteredEvents.length / EVENTS_PER_PAGE),
+  );
+  const currentEventPage = Math.min(eventPage, totalEventPages);
+  const firstEventIndex = (currentEventPage - 1) * EVENTS_PER_PAGE;
+  const visibleEvents = filteredEvents.slice(
+    firstEventIndex,
+    firstEventIndex + EVENTS_PER_PAGE,
+  );
+
+  useEffect(() => {
+    if (eventPage !== currentEventPage) setEventPage(currentEventPage);
+  }, [eventPage, currentEventPage]);
 
   const stats = [
     {
@@ -836,7 +853,10 @@ function Adminpnanel() {
                     aria-label="Search events"
                     placeholder="Search by event, venue, or description..."
                     value={search}
-                    onChange={(event) => setSearch(event.target.value)}
+                    onChange={(event) => {
+                      setSearch(event.target.value);
+                      setEventPage(1);
+                    }}
                     className={`${inputClass} py-2.5 pl-10`}
                   />
                 </label>
@@ -849,7 +869,10 @@ function Adminpnanel() {
                   <select
                     aria-label="Filter by event status"
                     value={statusFilter}
-                    onChange={(event) => setStatusFilter(event.target.value)}
+                    onChange={(event) => {
+                      setStatusFilter(event.target.value);
+                      setEventPage(1);
+                    }}
                     className={`${inputClass} appearance-none py-2.5 pl-10 pr-9`}
                   >
                     <option value="all">All statuses</option>
@@ -872,7 +895,7 @@ function Adminpnanel() {
                   Loading events...
                 </div>
               ) : filteredEvents.length ? (
-                filteredEvents.map((event) => (
+                visibleEvents.map((event) => (
                   <article key={event.id} className="space-y-4 p-4 sm:p-5">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
@@ -1035,7 +1058,7 @@ function Adminpnanel() {
                       </td>
                     </tr>
                   ) : filteredEvents.length > 0 ? (
-                    filteredEvents.map((event) => (
+                    visibleEvents.map((event) => (
                       <tr
                         key={event.id}
                         className="group transition hover:bg-slate-50/70"
@@ -1171,15 +1194,47 @@ function Adminpnanel() {
               </table>
             </div>
 
-            <footer className="flex flex-col gap-2 border-t border-slate-100 px-5 py-4 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:px-7">
+            <footer className="flex flex-col gap-3 border-t border-slate-100 px-5 py-4 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:px-7">
               <span>
                 Showing{" "}
                 <strong className="text-slate-700">
-                  {filteredEvents.length}
+                  {filteredEvents.length ? firstEventIndex + 1 : 0}–
+                  {Math.min(
+                    firstEventIndex + EVENTS_PER_PAGE,
+                    filteredEvents.length,
+                  )}
                 </strong>{" "}
-                of <strong className="text-slate-700">{events.length}</strong>{" "}
-                events
+                of <strong className="text-slate-700">{filteredEvents.length}</strong>{" "}
+                filtered events (
+                <strong className="text-slate-700">{events.length}</strong>{" "}
+                total)
               </span>
+              <nav
+                aria-label="Event list pagination"
+                className="flex items-center justify-between gap-2 sm:justify-end"
+              >
+                <button
+                  type="button"
+                  onClick={() => setEventPage(currentEventPage - 1)}
+                  disabled={currentEventPage === 1}
+                  className="inline-flex min-h-9 items-center gap-1 rounded-lg border border-slate-200 px-3 font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  <ChevronLeft size={15} />
+                  Previous
+                </button>
+                <span className="whitespace-nowrap px-2">
+                  Page {currentEventPage} of {totalEventPages}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setEventPage(currentEventPage + 1)}
+                  disabled={currentEventPage === totalEventPages}
+                  className="inline-flex min-h-9 items-center gap-1 rounded-lg border border-slate-200 px-3 font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  Next
+                  <ChevronRight size={15} />
+                </button>
+              </nav>
             </footer>
           </section>
         </main>

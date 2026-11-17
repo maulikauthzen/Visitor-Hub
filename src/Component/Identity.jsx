@@ -1,3 +1,4 @@
+import { API_URL } from "../lib/api";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -39,7 +40,7 @@ export default function Identify() {
       setLoading(true);
 
       const res = await axios.post(
-        "http://192.168.1.64:3000/auth/identity-verification",
+        `${API_URL}/auth/identity-verification`,
         {
           ...state,
           method: method,

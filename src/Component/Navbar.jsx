@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { API_URL } from "../lib/api";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { LogOut, Menu, ShieldCheck, UserRound, X } from "lucide-react";
 import axios from "axios";
@@ -13,6 +14,7 @@ export default function Navbar() {
   const role = getTokenRole(token);
   const isAuthenticated = Boolean(role);
 
+  const lighttheme = useRef(null);
   useEffect(() => {
     setMenuOpen(false);
   }, [location.pathname, location.hash]);
@@ -24,7 +26,7 @@ export default function Navbar() {
     }
 
     axios
-      .get("http://192.168.1.64:3000/user/profile", {
+      .get(`${API_URL}/user/profile`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => setProfile(response.data))
@@ -53,11 +55,17 @@ export default function Navbar() {
 
   const navItems = [
     { label: "Home", to: "/", active: location.pathname === "/" },
-    { label: "About Us", to: "/aboutus", active: location.pathname === "/aboutus" },
-    { label: "Contact Us", to: "/contactus", active: location.pathname === "/contactus" },
+    {
+      label: "About Us",
+      to: "/aboutus",
+      active: location.pathname === "/aboutus",
+    },
+    {
+      label: "Contact Us",
+      to: "/contactus",
+      active: location.pathname === "/contactus",
+    },
 
-
-    
     ...(isAuthenticated
       ? [
           {
@@ -99,6 +107,7 @@ export default function Navbar() {
             <span className="grid size-9 place-items-center rounded-xl bg-[#17352b] text-sm font-extrabold text-[#f0c879] shadow-sm transition-transform duration-200 group-hover:-rotate-3">
               V
             </span>
+
             <span className="text-[1.15rem] font-bold tracking-tight text-[#17352b]">
               Visitor<span className="text-[#b98a3f]">Hub</span>
             </span>

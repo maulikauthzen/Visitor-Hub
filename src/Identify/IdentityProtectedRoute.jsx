@@ -1,3 +1,4 @@
+import { API_URL } from "../lib/api";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
@@ -18,7 +19,7 @@ export default function IdentityProtectedRoute({ children }) {
 
       try {
         await axios.get(
-          "http://192.168.1.64:3000/auth/register",
+          `${API_URL}/auth/register`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -79,7 +80,7 @@ export default function IdentityProtectedRoute({ children }) {
 
 //       try {
 //         const res = await axios.get(
-//           "http://192.168.1.64:3000/auth/identity-status",
+//           `${API_URL}/auth/identity-status`,
 //           {
 //             headers: {
 //               Authorization: `Bearer ${token}`,

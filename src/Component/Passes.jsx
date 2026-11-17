@@ -1,3 +1,4 @@
+import { API_URL } from "../lib/api";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -28,7 +29,7 @@ export default function Passes() {
   function getpass() {
     const token = localStorage.getItem("token");
     axios
-      .get(`http://192.168.1.64:3000/events/${id}`, {
+      .get(`${API_URL}/events/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -44,7 +45,7 @@ export default function Passes() {
 
     axios
       .post(
-        `http://192.168.1.64:3000/events/${id}/passes`,
+        `${API_URL}/events/${id}/passes`,
         {
           name: pass.name,
           description: pass.description,
@@ -75,7 +76,7 @@ export default function Passes() {
       return;
     }
     axios
-      .delete(`http://192.168.1.64:3000/events/${eventId}/passes/${passId}`, {
+      .delete(`${API_URL}/events/${eventId}/passes/${passId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -97,7 +98,7 @@ export default function Passes() {
 
     axios
       .patch(
-        `http://192.168.1.64:3000/events/${id}/passes/${passId}`,
+        `${API_URL}/events/${id}/passes/${passId}`,
         {
           name: pass.name,
           description: pass.description,

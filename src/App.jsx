@@ -31,6 +31,8 @@ import Deletedevents from "./Component/Deletedevents";
 import Deletedpass from "./Component/Deletedpass";
 import Deletedregs from "./Component/Deletedregs";
 import Deletedthings from "./Component/Deletedthings";
+import Forgetpassword from "./Component/Forgetpassword";
+import Resetpassw from "./Component/Resetpassw";
 
 function App() {
   const location = useLocation();
@@ -44,6 +46,8 @@ function App() {
       "/deletedpass",
       "/deletedregs",
       "/registraions",
+      // "/forgetpass",
+      // "/resetpassw"
     ].includes(location.pathname) ||
     location.pathname.startsWith("/registrations/") ||
     location.pathname.startsWith("/deletedthings");
@@ -57,6 +61,9 @@ function App() {
         <Route path="/verifyemail" element={<Verifyemail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgetpass" element={<Forgetpassword/>}/>
+        <Route path="/resetpassw" element={<Resetpassw/>}/>
+
         <Route
           path="/admin"
           element={

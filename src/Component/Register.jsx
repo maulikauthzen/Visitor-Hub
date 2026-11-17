@@ -1,3 +1,4 @@
+import { API_URL } from "../lib/api";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -27,7 +28,7 @@ export default function Register() {
       }
 
       try {
-        await axios.get("http://192.168.1.64:3000/auth/register", {
+        await axios.get(`${API_URL}/auth/register`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -61,7 +62,7 @@ export default function Register() {
 
     try {
       const res = await axios.post(
-        "http://192.168.1.64:3000/auth/register",
+        `${API_URL}/auth/register`,
         state,
         {
           headers: {

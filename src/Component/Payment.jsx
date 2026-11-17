@@ -1,3 +1,4 @@
+import { API_URL } from "../lib/api";
 import { Button } from "@base-ui/react/button";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -27,7 +28,7 @@ export default function Payment() {
     const token = localStorage.getItem("token");
 
     axios
-      .get(`http://192.168.1.64:3000/payment/${id}`, {
+      .get(`${API_URL}/payment/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -48,7 +49,7 @@ export default function Payment() {
 
     axios
       .post(
-        "http://192.168.1.64:3000/payment",
+        `${API_URL}/payment`,
         {
           id: state.id,
           amount: state.amount,

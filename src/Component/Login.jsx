@@ -1,3 +1,4 @@
+import { API_URL } from "../lib/api";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -21,7 +22,7 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://192.168.1.64:3000/auth/login", {
+      const res = await axios.post(`${API_URL}/auth/login`, {
         email: state.email,
         password: state.password,
       });
@@ -131,6 +132,13 @@ export default function Login() {
               className="w-full rounded-lg bg-blue-600 py-3 font-semibold text-white transition duration-200 hover:bg-blue-700 focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
             >
               Login
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate("/forgetpass")}
+              className="w-full rounded-lg border border-blue-600 bg-white py-3 font-semibold text-blue-700 transition duration-200 hover:bg-blue-50 focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
+            >
+              Forgot Password
             </button>
           </form>
 

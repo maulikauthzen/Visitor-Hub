@@ -1,3 +1,4 @@
+import { API_URL } from "../lib/api";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
@@ -25,7 +26,7 @@ export default function Registrations() {
     setError(false);
 
     axios
-      .get("http://192.168.1.64:3000/user/registered-events", {
+      .get(`${API_URL}/user/registered-events`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
 
-const API_URL = "http://192.168.1.64:3000";
+import { API_URL } from "../lib/api";
 const PAGE_SIZE = 10;
 
 function authConfig() {

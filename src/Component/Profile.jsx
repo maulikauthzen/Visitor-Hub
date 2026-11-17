@@ -1,3 +1,4 @@
+import { API_URL } from "../lib/api";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
@@ -14,7 +15,7 @@ export default function Profile() {
     const token = localStorage.getItem("token");
 
     axios
-      .get(`http://192.168.1.64:3000/user/profile`, {
+      .get(`${API_URL}/user/profile`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -45,7 +46,7 @@ export default function Profile() {
 
     axios
       .patch(
-        `http://192.168.1.64:3000/user/details`,
+        `${API_URL}/user/details`,
         {
           firstName: profile.firstName,
           lastName: profile.lastName,

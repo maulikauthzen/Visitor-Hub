@@ -1,3 +1,4 @@
+import { API_URL } from "../lib/api";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -41,7 +42,7 @@ export default function Registrationform() {
     setError("");
 
     axios
-      .get(`http://192.168.1.64:3000/events/${id}/passes`, {
+      .get(`${API_URL}/events/${id}/passes`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -133,7 +134,7 @@ export default function Registrationform() {
 
     axios
       .post(
-        `http://192.168.1.64:3000/events/${id}/register`,
+        `${API_URL}/events/${id}/register`,
         {
           attendeeName: state.attendeeName.trim(),
           email: state.email.trim(),
@@ -197,7 +198,7 @@ export default function Registrationform() {
     }
 
     axios
-      .get(`http://192.168.1.64:3000/events/${id}`, {
+      .get(`${API_URL}/events/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -229,7 +230,7 @@ export default function Registrationform() {
     }
 
     axios
-      .get("http://192.168.1.64:3000/user/profile", {
+      .get(`${API_URL}/user/profile`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

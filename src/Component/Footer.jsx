@@ -16,49 +16,6 @@ export default function Footer() {
       />
 
       <div className="relative mx-auto max-w-7xl px-5 pb-7 pt-12 sm:px-8 sm:pt-16 lg:px-10">
-        <div className="mb-12">
-          <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <div className="mb-2 flex items-center gap-2 text-[#d6a85f]">
-                <MapPin size={18} />
-                <span className="text-xs font-semibold uppercase tracking-[0.2em]">
-                  Find Us
-                </span>
-              </div>
-
-              <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
-                Visit Our Office
-              </h2>
-
-              <p className="mt-2 text-sm leading-6 text-slate-400">
-                Privilon, 312, Sarkhej - Gandhinagar Highway, Vikram Nagar,
-                Ahmedabad, Gujarat 380058.
-              </p>
-            </div>
-
-            {/* <a
-              href="https://www.google.com/maps/search/?api=1&query=Privilon%2C%20312%2C%20Sarkhej%20-%20Gandhinagar%20Highway%2C%20Vikram%20Nagar%2C%20Ahmedabad%2C%20Gujarat%20380058"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-2 inline-flex w-fit items-center gap-2 rounded-lg border border-white/10 px-4 py-2.5 text-sm font-medium text-[#f0c879] transition hover:border-[#d6a85f] hover:bg-white/5"
-            >
-              Get Directions
-              <ArrowUpRight size={16} />
-            </a> */}
-          </div>
-
-          <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-1.5 shadow-xl shadow-black/20">
-            <iframe
-              title="VisitorHub office location in Ahmedabad"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d29375.101539946136!2d72.48490848384719!3d23.02789546312918!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e9b390a555555%3A0xcbbfef21de2b5a37!2sPrivilon%2C%20312%2C%20Sarkhej%20-%20Gandhinagar%20Hwy%2C%20Vikram%20Nagar%2C%20Ahmedabad%2C%20Gujarat%20380058!5e0!3m2!1sen!2sin!4v1792565578425!5m2!1sen!2sin"
-              className="h-64 w-full rounded-xl border-0 sm:h-80 lg:h-96"
-              loading="lazy"
-              allowFullScreen
-              referrerPolicy="strict-origin-when-cross-origin"
-            />
-          </div>
-        </div>
-
         <div className="grid gap-10 border-b border-white/10 pb-11 lg:grid-cols-[1.3fr_1fr_1fr_1.35fr] lg:gap-12">
           <div className="max-w-sm">
             <Link

@@ -1,3 +1,4 @@
+import { API_URL } from "../lib/api";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -25,7 +26,7 @@ export default function Viewregs() {
     const token = localStorage.getItem("token");
 
     axios
-      .get(`http://192.168.1.64:3000/events/registrations/${id}`, {
+      .get(`${API_URL}/events/registrations/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

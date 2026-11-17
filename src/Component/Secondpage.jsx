@@ -1,3 +1,4 @@
+import { API_URL } from "../lib/api";
 import * as React from "react";
 import {
   ArrowRight,
@@ -28,7 +29,7 @@ export default function Secondpage() {
 
   function getevents() {
     axios
-      .get(`http://192.168.1.64:3000/events`)
+      .get(`${API_URL}/events`)
       .then((res) => {
         setData(res.data);
         console.log(res.data);

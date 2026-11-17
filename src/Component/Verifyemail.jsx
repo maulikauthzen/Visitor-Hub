@@ -1,3 +1,4 @@
+import { API_URL } from "../lib/api";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -15,7 +16,7 @@ export default function Verifyemail() {
 
   async function sendOtp() {
     try {
-      const res = await axios.post("http://192.168.1.64:3000/auth/send-otp", {
+      const res = await axios.post(`${API_URL}/auth/send-otp`, {
         email: state.email,
         phone: state.phone,
       });
@@ -39,7 +40,7 @@ export default function Verifyemail() {
     }
 
     try {
-      const res = await axios.post("http://192.168.1.64:3000/auth/verify-otp", {
+      const res = await axios.post(`${API_URL}/auth/verify-otp`, {
         email: state.email,
         phone: state.phone,
         otp: state.otp,
