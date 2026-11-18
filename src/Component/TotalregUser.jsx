@@ -14,7 +14,7 @@ import {
 import { Link, useSearchParams } from "react-router-dom";
 
 import { API_URL } from "../lib/api";
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 6;
 
 function authConfig() {
   return {
