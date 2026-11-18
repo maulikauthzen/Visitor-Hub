@@ -275,39 +275,32 @@ export default function Secondpage() {
           </CarouselContent>
 
           {totalPages > 1 && (
-            <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+            <nav
+              aria-label="Event list pagination"
+              className="mx-auto mt-7 flex w-full max-w-sm items-center justify-between gap-2"
+            >
               <button
+                type="button"
                 onClick={previousPage}
                 disabled={currentPage === 0}
-                className="rounded-full border border-[#cbd8c8] bg-white px-5 py-2 text-sm font-bold text-[#274d3d] transition hover:bg-[#e9f0e7] disabled:cursor-not-allowed disabled:opacity-40"
+                className="inline-flex min-h-9 items-center whitespace-nowrap rounded-full border border-[#cbd8c8] bg-white px-3 text-sm font-bold text-[#274d3d] transition hover:bg-[#e9f0e7] disabled:cursor-not-allowed disabled:opacity-40"
               >
                 ← Previous
               </button>
 
-              <div className="flex items-center gap-2">
-                {Array.from({ length: totalPages }).map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentPage(index)}
-                    className={`h-9 w-9 rounded-full text-sm font-bold transition ${
-                      currentPage === index
-                        ? "bg-[#47735b] text-white"
-                        : "border border-[#cbd8c8] bg-white text-[#47735b] hover:bg-[#e9f0e7]"
-                    }`}
-                  >
-                    {index + 1}
-                  </button>
-                ))}
-              </div>
+              <span className="whitespace-nowrap px-1 text-sm font-medium text-[#748078]">
+                Page {currentPage + 1} of {totalPages}
+              </span>
 
               <button
+                type="button"
                 onClick={nextPage}
                 disabled={currentPage === totalPages - 1}
-                className="rounded-full border border-[#cbd8c8] bg-white px-5 py-2 text-sm font-bold text-[#274d3d] transition hover:bg-[#e9f0e7] disabled:cursor-not-allowed disabled:opacity-40"
+                className="inline-flex min-h-9 items-center whitespace-nowrap rounded-full border border-[#cbd8c8] bg-white px-3 text-sm font-bold text-[#274d3d] transition hover:bg-[#e9f0e7] disabled:cursor-not-allowed disabled:opacity-40"
               >
                 Next →
               </button>
-            </div>
+            </nav>
           )}
         </Carousel>
       </div>

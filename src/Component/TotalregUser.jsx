@@ -14,7 +14,7 @@ import {
 import { Link, useSearchParams } from "react-router-dom";
 
 import { API_URL } from "../lib/api";
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 5;
 
 function authConfig() {
   return {
@@ -98,16 +98,6 @@ export default function TotalregUser() {
   const visibleRegistrations = filteredRegistrations.slice(
     startIndex,
     startIndex + PAGE_SIZE,
-  );
-  const pageNumbers = Array.from(
-    { length: Math.min(totalPages, 5) },
-    (_, index) => {
-      const firstPage = Math.min(
-        Math.max(currentPage - 2, 1),
-        Math.max(totalPages - 4, 1),
-      );
-      return firstPage + index;
-    },
   );
   const totalRevenue = registrations.reduce(
     (sum, registration) => sum + (Number(registration.amount) || 0),
@@ -473,46 +463,29 @@ export default function TotalregUser() {
           {!loading && totalPages > 1 && (
             <nav
               aria-label="Registration pages"
-              className="flex flex-col gap-3 border-t border-slate-100 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6"
+              className="mx-auto flex w-full max-w-md items-center justify-between gap-2 border-t border-slate-100 px-4 py-4 sm:px-6"
             >
-              <p className="text-xs text-slate-500">
+              <button
+                type="button"
+                onClick={() => setPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="inline-flex min-h-9 shrink-0 items-center gap-1 whitespace-nowrap rounded-lg border border-slate-200 px-2.5 text-xs font-medium text-slate-600 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 sm:px-3 sm:text-sm"
+              >
+                <ChevronLeft size={15} />
+                Previous
+              </button>
+              <span className="whitespace-nowrap text-xs text-slate-500 sm:text-sm">
                 Page {currentPage} of {totalPages}
-              </p>
-              <div className="flex items-center justify-between gap-1 sm:justify-end">
-                <button
-                  type="button"
-                  onClick={() => setPage(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  className="inline-flex min-h-10 items-center gap-1 rounded-lg border border-slate-200 px-3 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
-                >
-                  <ChevronLeft size={16} />
-                  <span className="hidden sm:inline">Previous</span>
-                </button>
-                {pageNumbers.map((page) => (
-                  <button
-                    type="button"
-                    key={page}
-                    aria-current={page === currentPage ? "page" : undefined}
-                    onClick={() => setPage(page)}
-                    className={`grid size-10 place-items-center rounded-lg text-sm font-semibold ${
-                      page === currentPage
-                        ? "bg-indigo-600 text-white"
-                        : "text-slate-600 hover:bg-slate-100"
-                    }`}
-                  >
-                    {page}
-                  </button>
-                ))}
-                <button
-                  type="button"
-                  onClick={() => setPage(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  className="inline-flex min-h-10 items-center gap-1 rounded-lg border border-slate-200 px-3 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
-                >
-                  <span className="hidden sm:inline">Next</span>
-                  <ChevronRight size={16} />
-                </button>
-              </div>
+              </span>
+              <button
+                type="button"
+                onClick={() => setPage(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="inline-flex min-h-9 shrink-0 items-center gap-1 whitespace-nowrap rounded-lg border border-slate-200 px-2.5 text-xs font-medium text-slate-600 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 sm:px-3 sm:text-sm"
+              >
+                Next
+                <ChevronRight size={15} />
+              </button>
             </nav>
           )}
         </section>
