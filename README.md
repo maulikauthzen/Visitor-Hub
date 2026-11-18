@@ -1,6 +1,10 @@
 # Visitor Hub
 
+<<<<<<< HEAD
 Visitor Hub is a React single-page web application for browsing events, registering attendees, managing event passes, and viewing registration tickets. This README documents the **client application only**.
+=======
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules...
+>>>>>>> 1e7b66ba5b6bd837f71481e7df1033db121d2aba
 
 The client sends HTTP requests to an API service for user, event, registration, payment, and QR-verification data. The API base address is configured in `src/lib/api.js`.
 
