@@ -149,7 +149,9 @@ export default function TotalregUser() {
 
   async function deleteregs(registrationId) {
     if (!registrationId) {
-      setError("This registration cannot be deleted because its ID is missing.");
+      setError(
+        "This registration cannot be deleted because its ID is missing.",
+      );
       return;
     }
     if (!window.confirm("Move this registration to the deleted archive?")) {

@@ -315,12 +315,7 @@ function Adminpnanel() {
         { replace: true },
       );
     }
-  }, [
-    currentEventPage,
-    eventsLoading,
-    requestedEventPage,
-    setSearchParams,
-  ]);
+  }, [currentEventPage, eventsLoading, requestedEventPage, setSearchParams]);
 
   function setEventPage(page) {
     setSearchParams(
@@ -1078,10 +1073,16 @@ function Adminpnanel() {
                     <th scope="col" className="w-[12%] px-3 py-4 font-bold">
                       Status
                     </th>
-                    <th scope="col" className="w-[17%] px-3 py-4 text-right font-bold">
+                    <th
+                      scope="col"
+                      className="w-[17%] px-3 py-4 text-right font-bold"
+                    >
                       Actions
                     </th>
-                    <th scope="col" className="w-[13%] px-3 py-4 text-right font-bold">
+                    <th
+                      scope="col"
+                      className="w-[13%] px-3 py-4 text-right font-bold"
+                    >
                       Registrations
                     </th>
                   </tr>
@@ -1246,7 +1247,10 @@ function Adminpnanel() {
                     filteredEvents.length,
                   )}
                 </strong>{" "}
-                of <strong className="text-slate-700">{filteredEvents.length}</strong>{" "}
+                of{" "}
+                <strong className="text-slate-700">
+                  {filteredEvents.length}
+                </strong>{" "}
                 filtered events (
                 <strong className="text-slate-700">{events.length}</strong>{" "}
                 total)
