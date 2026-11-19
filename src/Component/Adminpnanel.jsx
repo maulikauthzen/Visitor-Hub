@@ -1,6 +1,11 @@
 import axios from "axios";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import {
   ArrowDownUp,
   ArrowRight,
@@ -93,6 +98,7 @@ function formatTime(value) {
 function Adminpnanel() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [events, setEvents] = useState([]);
   const [summary, setSummary] = useState({});
   const [form, setForm] = useState(EMPTY_EVENT);
@@ -100,7 +106,6 @@ function Adminpnanel() {
   const [formOpen, setFormOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [eventPage, setEventPage] = useState(1);
   const [eventsLoading, setEventsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -111,6 +116,11 @@ function Adminpnanel() {
   const [activeNav, setActiveNav] = useState("overview");
   const [lastLoadedAt, setLastLoadedAt] = useState(null);
   const today = toLocalDateInput(new Date());
+  const returnTo = `${location.pathname}${location.search}`;
+  const requestedEventPage = Math.max(
+    1,
+    Number.parseInt(searchParams.get("eventPage"), 10) || 1,
+  );
 
   const loadEvents = useCallback(async (showLoading = true) => {
     if (showLoading) setEventsLoading(true);
@@ -286,7 +296,7 @@ function Adminpnanel() {
     1,
     Math.ceil(filteredEvents.length / EVENTS_PER_PAGE),
   );
-  const currentEventPage = Math.min(eventPage, totalEventPages);
+  const currentEventPage = Math.min(requestedEventPage, totalEventPages);
   const firstEventIndex = (currentEventPage - 1) * EVENTS_PER_PAGE;
   const visibleEvents = filteredEvents.slice(
     firstEventIndex,
@@ -294,8 +304,35 @@ function Adminpnanel() {
   );
 
   useEffect(() => {
-    if (eventPage !== currentEventPage) setEventPage(currentEventPage);
-  }, [eventPage, currentEventPage]);
+    if (!eventsLoading && requestedEventPage !== currentEventPage) {
+      setSearchParams(
+        (current) => {
+          const next = new URLSearchParams(current);
+          if (currentEventPage === 1) next.delete("eventPage");
+          else next.set("eventPage", String(currentEventPage));
+          return next;
+        },
+        { replace: true },
+      );
+    }
+  }, [
+    currentEventPage,
+    eventsLoading,
+    requestedEventPage,
+    setSearchParams,
+  ]);
+
+  function setEventPage(page) {
+    setSearchParams(
+      (current) => {
+        const next = new URLSearchParams(current);
+        if (page === 1) next.delete("eventPage");
+        else next.set("eventPage", String(page));
+        return next;
+      },
+      { preventScrollReset: true },
+    );
+  }
 
   const stats = [
     {
@@ -901,6 +938,7 @@ function Adminpnanel() {
                       <div className="min-w-0">
                         <Link
                           to={`/registrations/${event.id}`}
+                          state={{ returnTo }}
                           className="block truncate font-semibold text-slate-900 hover:text-indigo-700"
                         >
                           {event.name || "Untitled event"}
@@ -958,6 +996,7 @@ function Adminpnanel() {
                     <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                       <Link
                         to={`/registrations/${event.id}`}
+                        state={{ returnTo }}
                         className="inline-flex min-h-10 min-w-0 items-center justify-center gap-2 rounded-lg bg-indigo-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500/20"
                       >
                         <Users size={14} />
@@ -965,6 +1004,7 @@ function Adminpnanel() {
                       </Link>
                       <Link
                         to={`/passes/${event.id}`}
+                        state={{ returnTo }}
                         className="inline-flex min-h-10 min-w-0 items-center justify-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500/10"
                       >
                         View passes <Ticket size={14} />
@@ -1119,6 +1159,7 @@ function Adminpnanel() {
                           <div className="flex items-center justify-end gap-0.5">
                             <Link
                               to={`/passes/${event.id}`}
+                              state={{ returnTo }}
                               aria-label={`View passes for ${event.name}`}
                               title="View passes"
                               className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-slate-200 px-2 py-2 text-xs font-semibold text-slate-600 transition hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-700"
@@ -1153,6 +1194,7 @@ function Adminpnanel() {
                         <td className="px-3 py-5 text-right">
                           <Link
                             to={`/registrations/${event.id}`}
+                            state={{ returnTo }}
                             className="inline-flex min-h-10 max-w-full items-center justify-center gap-1 whitespace-nowrap rounded-lg bg-indigo-50 px-2 py-2 text-xs font-semibold text-indigo-700 transition hover:bg-indigo-100 focus:outline-none focus:ring-4 focus:ring-indigo-500/20"
                           >
                             View

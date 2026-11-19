@@ -9,6 +9,7 @@ import {
   Search,
   Trash2,
   Ticket,
+  TicketCheck,
   Users,
 } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
@@ -103,9 +104,12 @@ export default function TotalregUser() {
     (sum, registration) => sum + (Number(registration.amount) || 0),
     0,
   );
-
+  const totalPassesSold = registrations.reduce(
+    (sum, registration) => sum + (Number(registration.quantity) || 0),
+    0,
+  );
   useEffect(() => {
-    if (requestedPage !== currentPage) {
+    if (!loading && requestedPage !== currentPage) {
       setSearchParams(
         (current) => {
           const next = new URLSearchParams(current);
@@ -116,7 +120,7 @@ export default function TotalregUser() {
         { replace: true },
       );
     }
-  }, [currentPage, requestedPage, setSearchParams]);
+  }, [currentPage, loading, requestedPage, setSearchParams]);
 
   function setPage(page) {
     setSearchParams(
@@ -208,7 +212,7 @@ export default function TotalregUser() {
           </label>
         </header>
 
-        <section className="mb-6 grid gap-4 sm:grid-cols-2">
+        <section className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <article className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
             <div>
               <p className="text-sm font-medium text-slate-500">
@@ -220,6 +224,17 @@ export default function TotalregUser() {
             </div>
             <span className="grid size-11 place-items-center rounded-2xl bg-indigo-50 text-indigo-600">
               <Users size={20} />
+            </span>
+          </article>
+          <article className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <div>
+              <p className="text-sm font-medium text-slate-500">Passes sold</p>
+              <p className="mt-2 text-3xl font-bold tracking-tight text-slate-950">
+                {totalPassesSold}
+              </p>
+            </div>
+            <span className="grid size-11 place-items-center rounded-2xl bg-violet-50 text-violet-600">
+              <TicketCheck size={20} />
             </span>
           </article>
           <article className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">

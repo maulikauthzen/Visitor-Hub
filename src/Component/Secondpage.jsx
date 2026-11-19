@@ -9,7 +9,7 @@ import {
   Sparkles,
   Ticket,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   Carousel,
   CarouselContent,
@@ -19,9 +19,14 @@ import axios from "axios";
 
 export default function Secondpage() {
   const [data, setData] = React.useState([]);
-  const [currentPage, setCurrentPage] = React.useState(0);
+  const [eventsLoaded, setEventsLoaded] = React.useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const eventsPerPage = 3;
+  const requestedPage = Math.max(
+    1,
+    Number.parseInt(searchParams.get("page"), 10) || 1,
+  );
 
   React.useEffect(() => {
     getevents();
@@ -32,6 +37,7 @@ export default function Secondpage() {
       .get(`${API_URL}/events`)
       .then((res) => {
         setData(res.data);
+        setEventsLoaded(true);
         console.log(res.data);
       })
       .catch((error) => {
@@ -39,21 +45,48 @@ export default function Secondpage() {
       });
   }
 
-  const totalPages = Math.ceil(data.length / eventsPerPage);
+  const totalPages = Math.max(1, Math.ceil(data.length / eventsPerPage));
+  const currentPage = Math.min(requestedPage, totalPages);
 
-  const startIndex = currentPage * eventsPerPage;
+  const startIndex = (currentPage - 1) * eventsPerPage;
 
   const currentEvents = data.slice(startIndex, startIndex + eventsPerPage);
 
+  React.useEffect(() => {
+    if (eventsLoaded && requestedPage !== currentPage) {
+      setSearchParams(
+        (current) => {
+          const next = new URLSearchParams(current);
+          if (currentPage === 1) next.delete("page");
+          else next.set("page", String(currentPage));
+          return next;
+        },
+        { replace: true },
+      );
+    }
+  }, [currentPage, eventsLoaded, requestedPage, setSearchParams]);
+
+  function setPage(page) {
+    setSearchParams(
+      (current) => {
+        const next = new URLSearchParams(current);
+        if (page === 1) next.delete("page");
+        else next.set("page", String(page));
+        return next;
+      },
+      { preventScrollReset: true },
+    );
+  }
+
   function nextPage() {
-    if (currentPage < totalPages - 1) {
-      setCurrentPage((prev) => prev + 1);
+    if (currentPage < totalPages) {
+      setPage(currentPage + 1);
     }
   }
 
   function previousPage() {
-    if (currentPage > 0) {
-      setCurrentPage((prev) => prev - 1);
+    if (currentPage > 1) {
+      setPage(currentPage - 1);
     }
   }
 
@@ -282,20 +315,20 @@ export default function Secondpage() {
               <button
                 type="button"
                 onClick={previousPage}
-                disabled={currentPage === 0}
+                disabled={currentPage === 1}
                 className="inline-flex min-h-9 items-center whitespace-nowrap rounded-full border border-[#cbd8c8] bg-white px-3 text-sm font-bold text-[#274d3d] transition hover:bg-[#e9f0e7] disabled:cursor-not-allowed disabled:opacity-40"
               >
                 ← Previous
               </button>
 
               <span className="whitespace-nowrap px-1 text-sm font-medium text-[#748078]">
-                Page {currentPage + 1} of {totalPages}
+                Page {currentPage} of {totalPages}
               </span>
 
               <button
                 type="button"
                 onClick={nextPage}
-                disabled={currentPage === totalPages - 1}
+                disabled={currentPage === totalPages}
                 className="inline-flex min-h-9 items-center whitespace-nowrap rounded-full border border-[#cbd8c8] bg-white px-3 text-sm font-bold text-[#274d3d] transition hover:bg-[#e9f0e7] disabled:cursor-not-allowed disabled:opacity-40"
               >
                 Next →

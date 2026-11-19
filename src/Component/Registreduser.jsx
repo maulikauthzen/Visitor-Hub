@@ -10,7 +10,7 @@ import {
   Ticket,
   Users,
 } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 
 import { API_URL } from "../lib/api";
 
@@ -24,6 +24,7 @@ function getAuthConfig() {
 
 export default function Registreduser() {
   const { id } = useParams();
+  const location = useLocation();
   const [registrations, setRegistrations] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -112,11 +113,11 @@ export default function Registreduser() {
     <main className="min-h-screen bg-[#f5f6fa] px-4 pb-10 pt-6 text-slate-900 sm:px-6 sm:pt-8 lg:px-10">
       <div className="mx-auto max-w-7xl">
         <Link
-          to="/admin"
+          to={location.state?.returnTo || "/admin"}
           className="mb-5 inline-flex min-h-10 items-center gap-2 rounded-lg text-sm font-semibold text-slate-500 transition hover:text-indigo-700"
         >
           <ArrowLeft size={17} />
-          Back to dashboard
+          Back to events
         </Link>
 
         <header className="mb-7 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">

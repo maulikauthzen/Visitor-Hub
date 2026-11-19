@@ -1,8 +1,18 @@
 import { API_URL } from "../lib/api";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Check, CircleDollarSign, Pencil, Plus, Ticket, Trash2, Users, X } from "lucide-react";
+import { Link, useLocation, useParams } from "react-router-dom";
+import {
+  ArrowLeft,
+  Check,
+  CircleDollarSign,
+  Pencil,
+  Plus,
+  Ticket,
+  Trash2,
+  Users,
+  X,
+} from "lucide-react";
 
 const emptyPass = {
   name: "",
@@ -16,6 +26,7 @@ const inputClass =
 
 export default function Passes() {
   const { id } = useParams();
+  const location = useLocation();
 
   const [state, setState] = useState(null);
 
@@ -142,6 +153,13 @@ export default function Passes() {
   return (
     <main className="min-h-screen bg-slate-50 px-4 pb-12 pt-24 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
+        <Link
+          to={location.state?.returnTo || "/admin"}
+          className="mb-5 inline-flex min-h-10 items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-white hover:text-slate-900"
+        >
+          <ArrowLeft size={17} />
+          Back to events
+        </Link>
         <header className="mb-8 border-b border-slate-200 pb-6">
           <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700">
             <Ticket size={14} /> Pass management
